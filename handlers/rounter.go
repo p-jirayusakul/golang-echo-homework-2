@@ -72,6 +72,16 @@ func (s *ServerHttpHandler) register(c echo.Context) (err error) {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
+	argProfiles := database.Profiles{
+		UserID: result,
+		Email:  body.Email,
+	}
+
+	err = s.Store.Queries.CreateProfiles(argProfiles)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+
 	var payload response.RegisterResponse
 	payload.ID = result.String()
 	return utils.RespondWithJSON(c, http.StatusCreated, payload)

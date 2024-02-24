@@ -37,7 +37,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	db.AutoMigrate(&database.Accounts{}, &database.ResetPassword{})
+	db.AutoMigrate(&database.Accounts{}, &database.ResetPassword{}, &database.Address{}, &database.Profiles{})
 
 	sqlDB, err := db.DB()
 

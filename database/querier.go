@@ -8,6 +8,10 @@ import (
 type Queries interface {
 	CreateAccounts(payload Accounts) (uuid.UUID, error)
 	ReadAccounts(email string) (Accounts, error)
+	CreateProfiles(payload Profiles) error
+	GetProfiles(id uuid.UUID) (Profiles, error)
+	UpdateProfiles(payload UpdateProfilesParams) error
+	DeleteProfiles(id uuid.UUID) error
 }
 
 type QueriesRepository struct {
