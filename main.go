@@ -1,13 +1,15 @@
 package main
 
 import (
+	"context"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"os"
 	"time"
 
-	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/p-jirayusakul/golang-echo-homework-2/configs"
 	"github.com/p-jirayusakul/golang-echo-homework-2/database"
 	"github.com/p-jirayusakul/golang-echo-homework-2/handlers"
@@ -15,34 +17,6 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
-
-func ErrorHandler(next echo.HandlerFunc) echo.HandlerFunc {
-	return func(c echo.Context) error {
-		err := next(c)
-		if err != nil {
-			// Handle errors here
-			switch e := err.(type) {
-			case *echo.HTTPError:
-				return utils.RespondWithError(c, e.Code, e.Message.(string))
-			default:
-				return utils.RespondWithError(c, http.StatusInternalServerError, "Internal Server Error")
-			}
-		}
-		return nil
-	}
-}
-
-type CustomValidator struct {
-	validator *validator.Validate
-}
-
-func (cv *CustomValidator) Validate(i interface{}) error {
-	if err := cv.validator.Struct(i); err != nil {
-		// Optionally, you could return the error to give each route more control over the status code
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-	}
-	return nil
-}
 
 func main() {
 
@@ -70,8 +44,49 @@ func main() {
 	store := database.NewStore(db)
 
 	app := echo.New()
-	app.Validator = &CustomValidator{validator: validator.New()}
-	app.Use(ErrorHandler)
+	app.Validator = utils.NewCustomValidator()
+	app.Use(utils.ErrorHandler)
+
+	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
+
+	app.Use(
+		middleware.RequestLoggerWithConfig(middleware.RequestLoggerConfig{
+			LogRequestID:     true,
+			LogRemoteIP:      true,
+			LogURI:           true,
+			LogHost:          true,
+			LogMethod:        true,
+			LogUserAgent:     true,
+			LogStatus:        true,
+			LogError:         true,
+			LogLatency:       true,
+			LogContentLength: true,
+			LogValuesFunc: func(c echo.Context, v middleware.RequestLoggerValues) error {
+				var errMsg string
+				var logLevel slog.Level
+
+				if v.Error != nil {
+					errMsg = v.Error.Error()
+					logLevel = slog.LevelError
+				} else {
+					logLevel = slog.LevelInfo
+				}
+
+				logger.LogAttrs(context.Background(), logLevel, "REQUEST",
+					slog.String("id", v.RequestID),
+					slog.String("remote_ip", v.RemoteIP),
+					slog.String("host", v.Host),
+					slog.String("method", v.Method),
+					slog.String("uri", v.URI),
+					slog.String("user_agent", v.UserAgent),
+					slog.Int("status", v.Status),
+					slog.String("error", errMsg),
+					slog.String("latency", v.Latency.String()),
+				)
+				return nil
+			},
+		}),
+	)
 	app.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, World!")
 	})

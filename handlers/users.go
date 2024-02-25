@@ -10,17 +10,17 @@ import (
 	"github.com/p-jirayusakul/golang-echo-homework-2/utils"
 )
 
-func (s *ServerHttpHandler) createProfiles(c echo.Context) (err error) {
+func (s *ServerHttpHandler) CreateProfiles(c echo.Context) (err error) {
 
 	// pare json
 	body := new(request.CreateProfilesRequest)
 	if err := c.Bind(body); err != nil {
-		return utils.RespondWithError(c, http.StatusBadRequest, err.Error())
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	// validate DTO
 	if err = c.Validate(body); err != nil {
-		return utils.RespondWithError(c, http.StatusBadRequest, err.Error())
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	var uid uuid.UUID
@@ -34,50 +34,50 @@ func (s *ServerHttpHandler) createProfiles(c echo.Context) (err error) {
 		Phone:     &body.Phone,
 	}
 
-	err = s.Store.Queries.CreateProfiles(arg)
+	err = s.store.CreateProfiles(arg)
 	if err != nil {
-		return utils.RespondWithError(c, http.StatusInternalServerError, err.Error())
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
 	var payload interface{}
 	return utils.RespondWithJSON(c, http.StatusCreated, payload)
 }
 
-func (s *ServerHttpHandler) getProfiles(c echo.Context) (err error) {
+func (s *ServerHttpHandler) GetProfiles(c echo.Context) (err error) {
 
 	// pare json
 	body := new(request.GetProfilesByUserId)
 	if err := c.Bind(body); err != nil {
-		return utils.RespondWithError(c, http.StatusBadRequest, err.Error())
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	// validate DTO
 	if err = c.Validate(body); err != nil {
-		return utils.RespondWithError(c, http.StatusBadRequest, err.Error())
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	var uid uuid.UUID
 	uid.Scan(body.UserID)
 
-	result, err := s.Store.Queries.GetProfiles(uid)
+	result, err := s.store.GetProfiles(uid)
 	if err != nil {
-		return utils.RespondWithError(c, http.StatusInternalServerError, err.Error())
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
 	return utils.RespondWithJSON(c, http.StatusCreated, result)
 }
 
-func (s *ServerHttpHandler) updateProfiles(c echo.Context) (err error) {
+func (s *ServerHttpHandler) UpdateProfiles(c echo.Context) (err error) {
 
 	// pare json
 	body := new(request.UpdateProfilesRequest)
 	if err := c.Bind(body); err != nil {
-		return utils.RespondWithError(c, http.StatusBadRequest, err.Error())
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	// validate DTO
 	if err = c.Validate(body); err != nil {
-		return utils.RespondWithError(c, http.StatusBadRequest, err.Error())
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	var uid uuid.UUID
@@ -89,51 +89,51 @@ func (s *ServerHttpHandler) updateProfiles(c echo.Context) (err error) {
 		LastName:  body.LastName,
 	}
 
-	err = s.Store.Queries.UpdateProfiles(arg)
+	err = s.store.UpdateProfiles(arg)
 	if err != nil {
-		return utils.RespondWithError(c, http.StatusInternalServerError, err.Error())
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
 	var payload interface{}
-	return utils.RespondWithJSON(c, http.StatusCreated, payload)
+	return utils.RespondWithJSON(c, http.StatusOK, payload)
 }
 
-func (s *ServerHttpHandler) deleteProfiles(c echo.Context) (err error) {
+func (s *ServerHttpHandler) DeleteProfiles(c echo.Context) (err error) {
 
 	// pare json
 	body := new(request.GetProfilesByUserId)
 	if err := c.Bind(body); err != nil {
-		return utils.RespondWithError(c, http.StatusBadRequest, err.Error())
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	// validate DTO
 	if err = c.Validate(body); err != nil {
-		return utils.RespondWithError(c, http.StatusBadRequest, err.Error())
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	var uid uuid.UUID
 	uid.Scan(body.UserID)
 
-	err = s.Store.Queries.DeleteProfiles(uid)
+	err = s.store.DeleteProfiles(uid)
 	if err != nil {
-		return utils.RespondWithError(c, http.StatusInternalServerError, err.Error())
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
 	var payload interface{}
 	return utils.RespondWithJSON(c, http.StatusCreated, payload)
 }
 
-func (s *ServerHttpHandler) createAddress(c echo.Context) (err error) {
+func (s *ServerHttpHandler) CreateAddress(c echo.Context) (err error) {
 
 	// pare json
 	body := new(request.CreateAddressRequest)
 	if err := c.Bind(body); err != nil {
-		return utils.RespondWithError(c, http.StatusBadRequest, err.Error())
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	// validate DTO
 	if err = c.Validate(body); err != nil {
-		return utils.RespondWithError(c, http.StatusBadRequest, err.Error())
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	var uid uuid.UUID
@@ -148,50 +148,50 @@ func (s *ServerHttpHandler) createAddress(c echo.Context) (err error) {
 		State:    body.State,
 	}
 
-	err = s.Store.Queries.CreateAddress(arg)
+	err = s.store.CreateAddress(arg)
 	if err != nil {
-		return utils.RespondWithError(c, http.StatusInternalServerError, err.Error())
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
 	var payload interface{}
 	return utils.RespondWithJSON(c, http.StatusCreated, payload)
 }
 
-func (s *ServerHttpHandler) getAddress(c echo.Context) (err error) {
+func (s *ServerHttpHandler) GetAddress(c echo.Context) (err error) {
 
 	// pare json
 	body := new(request.GetAddressRequest)
 	if err := c.Bind(body); err != nil {
-		return utils.RespondWithError(c, http.StatusBadRequest, err.Error())
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	// validate DTO
 	if err = c.Validate(body); err != nil {
-		return utils.RespondWithError(c, http.StatusBadRequest, err.Error())
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	var uid uuid.UUID
 	uid.Scan(body.AddressId)
 
-	result, err := s.Store.Queries.GetAddress(uid)
+	result, err := s.store.GetAddress(uid)
 	if err != nil {
-		return utils.RespondWithError(c, http.StatusInternalServerError, err.Error())
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
 	return utils.RespondWithJSON(c, http.StatusCreated, result)
 }
 
-func (s *ServerHttpHandler) updateAddress(c echo.Context) (err error) {
+func (s *ServerHttpHandler) UpdateAddress(c echo.Context) (err error) {
 
 	// pare json
 	body := new(request.UpdateAddressRequest)
 	if err := c.Bind(body); err != nil {
-		return utils.RespondWithError(c, http.StatusBadRequest, err.Error())
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	// validate DTO
 	if err = c.Validate(body); err != nil {
-		return utils.RespondWithError(c, http.StatusBadRequest, err.Error())
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	var aid uuid.UUID
@@ -210,34 +210,34 @@ func (s *ServerHttpHandler) updateAddress(c echo.Context) (err error) {
 		State:     body.State,
 	}
 
-	err = s.Store.Queries.UpdateAddress(arg)
+	err = s.store.UpdateAddress(arg)
 	if err != nil {
-		return utils.RespondWithError(c, http.StatusInternalServerError, err.Error())
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
 	var payload interface{}
 	return utils.RespondWithJSON(c, http.StatusCreated, payload)
 }
 
-func (s *ServerHttpHandler) deleteAddress(c echo.Context) (err error) {
+func (s *ServerHttpHandler) DeleteAddress(c echo.Context) (err error) {
 
 	// pare json
 	body := new(request.GetAddressRequest)
 	if err := c.Bind(body); err != nil {
-		return utils.RespondWithError(c, http.StatusBadRequest, err.Error())
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	// validate DTO
 	if err = c.Validate(body); err != nil {
-		return utils.RespondWithError(c, http.StatusBadRequest, err.Error())
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	var uid uuid.UUID
 	uid.Scan(body.AddressId)
 
-	err = s.Store.Queries.DeleteAddress(uid)
+	err = s.store.DeleteAddress(uid)
 	if err != nil {
-		return utils.RespondWithError(c, http.StatusInternalServerError, err.Error())
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
 	var payload interface{}

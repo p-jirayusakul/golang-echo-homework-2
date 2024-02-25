@@ -5,7 +5,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type Queries interface {
+type Querier interface {
 	// account
 	CreateAccounts(payload Accounts) (uuid.UUID, error)
 	GetAccounts(email string) (Accounts, error)
@@ -24,10 +24,12 @@ type Queries interface {
 	DeleteAddress(id uuid.UUID) error
 }
 
-type QueriesRepository struct {
+type Queries struct {
 	db *gorm.DB
 }
 
-func NewQueriesRepository(db *gorm.DB) QueriesRepository {
-	return QueriesRepository{db: db}
+func New(db *gorm.DB) *Queries {
+	return &Queries{db: db}
 }
+
+var _ Querier = (*Queries)(nil)

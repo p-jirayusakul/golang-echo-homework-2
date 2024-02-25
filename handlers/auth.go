@@ -9,35 +9,34 @@ import (
 	"github.com/p-jirayusakul/golang-echo-homework-2/handlers/request"
 	"github.com/p-jirayusakul/golang-echo-homework-2/handlers/response"
 	"github.com/p-jirayusakul/golang-echo-homework-2/utils"
-	"gorm.io/gorm"
 )
 
-func (s *ServerHttpHandler) register(c echo.Context) (err error) {
+func (s *ServerHttpHandler) Register(c echo.Context) (err error) {
 	// pare json
 	body := new(request.RegisterRequest)
 	if err := c.Bind(body); err != nil {
-		return utils.RespondWithError(c, http.StatusBadRequest, err.Error())
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	// validate DTO
 	if err = c.Validate(body); err != nil {
-		return utils.RespondWithError(c, http.StatusBadRequest, err.Error())
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	// check email before insert
-	isAlreadyExists, err := s.Store.Queries.IsEmailAlreadyExists(body.Email)
+	isAlreadyExists, err := s.store.IsEmailAlreadyExists(body.Email)
 	if err != nil {
-		return utils.RespondWithError(c, http.StatusInternalServerError, err.Error())
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
 	if isAlreadyExists {
-		return utils.RespondWithError(c, http.StatusBadRequest, "this email is already used")
+		return echo.NewHTTPError(http.StatusBadRequest, utils.ErrEmailIsAlreadyUsed.Error())
 	}
 
 	// hash password
 	hashedPassword, err := utils.HashPassword(body.Password)
 	if err != nil {
-		return utils.RespondWithError(c, http.StatusInternalServerError, err.Error())
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
 	arg := database.Accounts{
@@ -45,9 +44,9 @@ func (s *ServerHttpHandler) register(c echo.Context) (err error) {
 		Password: hashedPassword,
 	}
 
-	result, err := s.Store.Queries.CreateAccounts(arg)
+	result, err := s.store.CreateAccounts(arg)
 	if err != nil {
-		return utils.RespondWithError(c, http.StatusInternalServerError, err.Error())
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
 	argProfiles := database.Profiles{
@@ -55,9 +54,9 @@ func (s *ServerHttpHandler) register(c echo.Context) (err error) {
 		Email:  body.Email,
 	}
 
-	err = s.Store.Queries.CreateProfiles(argProfiles)
+	err = s.store.CreateProfiles(argProfiles)
 	if err != nil {
-		return utils.RespondWithError(c, http.StatusInternalServerError, err.Error())
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
 	var payload response.RegisterResponse
@@ -65,29 +64,29 @@ func (s *ServerHttpHandler) register(c echo.Context) (err error) {
 	return utils.RespondWithJSON(c, http.StatusCreated, payload)
 }
 
-func (s *ServerHttpHandler) login(c echo.Context) (err error) {
+func (s *ServerHttpHandler) Login(c echo.Context) (err error) {
 
 	// pare json
 	body := new(request.LoginRequest)
 	if err := c.Bind(body); err != nil {
-		return utils.RespondWithError(c, http.StatusBadRequest, err.Error())
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	// validate DTO
 	if err = c.Validate(body); err != nil {
-		return utils.RespondWithError(c, http.StatusBadRequest, err.Error())
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	account, err := s.Store.Queries.GetAccounts(body.Email)
+	account, err := s.store.GetAccounts(body.Email)
 	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return utils.RespondWithError(c, http.StatusUnauthorized, "email or password is invalid")
+		if errors.Is(err, utils.ErrDataNotFound) {
+			return echo.NewHTTPError(http.StatusUnauthorized, utils.ErrLoginFail.Error())
 		}
-		return utils.RespondWithError(c, http.StatusInternalServerError, err.Error())
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
 	if err = utils.CheckPassword(body.Password, account.Password); err != nil {
-		return utils.RespondWithError(c, http.StatusUnauthorized, "email or password is invalid")
+		return echo.NewHTTPError(http.StatusUnauthorized, utils.ErrLoginFail.Error())
 	}
 
 	var payload response.LoginResponse

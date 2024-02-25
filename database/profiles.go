@@ -1,16 +1,26 @@
 package database
 
 import (
+	"errors"
+
 	"github.com/google/uuid"
+	"github.com/p-jirayusakul/golang-echo-homework-2/utils"
+	"gorm.io/gorm"
 )
 
-func (x *QueriesRepository) CreateProfiles(payload Profiles) error {
+func (x *Queries) CreateProfiles(payload Profiles) error {
 	return x.db.Create(&payload).Error
 }
 
-func (x *QueriesRepository) GetProfiles(id uuid.UUID) (Profiles, error) {
+func (x *Queries) GetProfiles(id uuid.UUID) (Profiles, error) {
 	data := Profiles{}
 	result := x.db.Where("user_id = ?", id).First(&data)
+	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			return Profiles{}, utils.ErrDataNotFound
+		}
+		return Profiles{}, result.Error
+	}
 	return data, result.Error
 }
 
@@ -20,11 +30,14 @@ type UpdateProfilesParams struct {
 	LastName  string    `json:"lastName"`
 }
 
-func (x *QueriesRepository) UpdateProfiles(payload UpdateProfilesParams) error {
+func (x *Queries) UpdateProfiles(payload UpdateProfilesParams) error {
 	data := Profiles{}
 
 	result := x.db.Where("user_id = ?", payload.UserID).First(&data)
 	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			return utils.ErrDataNotFound
+		}
 		return result.Error
 	}
 
@@ -34,6 +47,14 @@ func (x *QueriesRepository) UpdateProfiles(payload UpdateProfilesParams) error {
 	return x.db.Model(Profiles{}).Where("user_id = ?", payload.UserID.String()).Updates(data).Error
 }
 
-func (x *QueriesRepository) DeleteProfiles(id uuid.UUID) error {
-	return x.db.Where("user_id = ?", id.String()).Delete(&Profiles{}).Error
+func (x *Queries) DeleteProfiles(id uuid.UUID) error {
+	result := x.db.Where("user_id = ?", id.String()).Delete(&Profiles{})
+	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			return utils.ErrDataNotFound
+		}
+		return result.Error
+	}
+
+	return nil
 }
