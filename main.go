@@ -11,9 +11,26 @@ import (
 	"github.com/p-jirayusakul/golang-echo-homework-2/configs"
 	"github.com/p-jirayusakul/golang-echo-homework-2/database"
 	"github.com/p-jirayusakul/golang-echo-homework-2/handlers"
+	"github.com/p-jirayusakul/golang-echo-homework-2/utils"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
+
+func ErrorHandler(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		err := next(c)
+		if err != nil {
+			// Handle errors here
+			switch e := err.(type) {
+			case *echo.HTTPError:
+				return utils.RespondWithError(c, e.Code, e.Message.(string))
+			default:
+				return utils.RespondWithError(c, http.StatusInternalServerError, "Internal Server Error")
+			}
+		}
+		return nil
+	}
+}
 
 type CustomValidator struct {
 	validator *validator.Validate
@@ -54,6 +71,7 @@ func main() {
 
 	app := echo.New()
 	app.Validator = &CustomValidator{validator: validator.New()}
+	app.Use(ErrorHandler)
 	app.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, World!")
 	})
