@@ -10,6 +10,18 @@ import (
 	"github.com/p-jirayusakul/golang-echo-homework-2/utils"
 )
 
+// Create Profiles
+// @Summary      Create Profiles By User Id
+// @Description  Create Profiles
+// @Tags         users
+// @Accept       json
+// @Produce      json
+// @Param request body request.CreateProfilesRequest true "body request"
+// @Success      201  {object}  utils.SuccessResponse
+// @Failure      400  {object}  utils.ErrorResponse
+// @Failure      404  {object}  utils.ErrorResponse
+// @Failure      500  {object}  utils.ErrorResponse
+// @Router       /users/profiles [post]
 func (s *ServerHttpHandler) CreateProfiles(c echo.Context) (err error) {
 
 	// pare json
@@ -43,6 +55,18 @@ func (s *ServerHttpHandler) CreateProfiles(c echo.Context) (err error) {
 	return utils.RespondWithJSON(c, http.StatusCreated, payload)
 }
 
+// Get Profiles
+// @Summary      Get Profiles By User Id
+// @Description  Get Profiles
+// @Tags         users
+// @Accept       json
+// @Produce      json
+// @Param        user_id   path      string  true  "User ID"
+// @Success      200  {object}  utils.SuccessResponse
+// @Failure      400  {object}  utils.ErrorResponse
+// @Failure      404  {object}  utils.ErrorResponse
+// @Failure      500  {object}  utils.ErrorResponse
+// @Router       /users/profiles/{user_id} [get]
 func (s *ServerHttpHandler) GetProfiles(c echo.Context) (err error) {
 
 	// pare json
@@ -67,6 +91,18 @@ func (s *ServerHttpHandler) GetProfiles(c echo.Context) (err error) {
 	return utils.RespondWithJSON(c, http.StatusCreated, result)
 }
 
+// Update Profiles
+// @Summary      Update Profiles By User Id
+// @Description  Update Profiles
+// @Tags         users
+// @Accept       json
+// @Produce      json
+// @Param request body request.UpdateProfilesRequest true "body request"
+// @Success      200  {object}  utils.SuccessResponse
+// @Failure      400  {object}  utils.ErrorResponse
+// @Failure      404  {object}  utils.ErrorResponse
+// @Failure      500  {object}  utils.ErrorResponse
+// @Router       /users/profiles [patch]
 func (s *ServerHttpHandler) UpdateProfiles(c echo.Context) (err error) {
 
 	// pare json
@@ -98,6 +134,18 @@ func (s *ServerHttpHandler) UpdateProfiles(c echo.Context) (err error) {
 	return utils.RespondWithJSON(c, http.StatusOK, payload)
 }
 
+// Delete Profiles
+// @Summary      Delete Profiles By User Id
+// @Description  Delete Profiles
+// @Tags         users
+// @Accept       json
+// @Produce      json
+// @Param        user_id   path      string  true  "User ID"
+// @Success      200  {object}  utils.SuccessResponse
+// @Failure      400  {object}  utils.ErrorResponse
+// @Failure      404  {object}  utils.ErrorResponse
+// @Failure      500  {object}  utils.ErrorResponse
+// @Router       /users/profiles/{user_id} [delete]
 func (s *ServerHttpHandler) DeleteProfiles(c echo.Context) (err error) {
 
 	// pare json
@@ -123,6 +171,18 @@ func (s *ServerHttpHandler) DeleteProfiles(c echo.Context) (err error) {
 	return utils.RespondWithJSON(c, http.StatusCreated, payload)
 }
 
+// Create Address
+// @Summary      Create Address By User Id
+// @Description  Create Address
+// @Tags         users
+// @Accept       json
+// @Produce      json
+// @Param request body request.CreateAddressRequest true "body request"
+// @Success      201  {object}  utils.SuccessResponse
+// @Failure      400  {object}  utils.ErrorResponse
+// @Failure      404  {object}  utils.ErrorResponse
+// @Failure      500  {object}  utils.ErrorResponse
+// @Router       /users/address [post]
 func (s *ServerHttpHandler) CreateAddress(c echo.Context) (err error) {
 
 	// pare json
@@ -157,6 +217,18 @@ func (s *ServerHttpHandler) CreateAddress(c echo.Context) (err error) {
 	return utils.RespondWithJSON(c, http.StatusCreated, payload)
 }
 
+// Get Address
+// @Summary      Get Address By Address Id
+// @Description  Get Address
+// @Tags         users
+// @Accept       json
+// @Produce      json
+// @Param        address_id   path      string  true  "Address ID"
+// @Success      200  {object}  utils.SuccessResponse
+// @Failure      400  {object}  utils.ErrorResponse
+// @Failure      404  {object}  utils.ErrorResponse
+// @Failure      500  {object}  utils.ErrorResponse
+// @Router       /users/address/{address_id} [get]
 func (s *ServerHttpHandler) GetAddress(c echo.Context) (err error) {
 
 	// pare json
@@ -181,6 +253,18 @@ func (s *ServerHttpHandler) GetAddress(c echo.Context) (err error) {
 	return utils.RespondWithJSON(c, http.StatusCreated, result)
 }
 
+// Update Address
+// @Summary      Update Address By User Id
+// @Description  Update Address
+// @Tags         users
+// @Accept       json
+// @Produce      json
+// @Param request body request.UpdateAddressRequest true "body request"
+// @Success      200  {object}  utils.SuccessResponse
+// @Failure      400  {object}  utils.ErrorResponse
+// @Failure      404  {object}  utils.ErrorResponse
+// @Failure      500  {object}  utils.ErrorResponse
+// @Router       /users/address [patch]
 func (s *ServerHttpHandler) UpdateAddress(c echo.Context) (err error) {
 
 	// pare json
@@ -219,6 +303,18 @@ func (s *ServerHttpHandler) UpdateAddress(c echo.Context) (err error) {
 	return utils.RespondWithJSON(c, http.StatusCreated, payload)
 }
 
+// Delete Address
+// @Summary      Delete Address By Address Id
+// @Description  Delete Address
+// @Tags         users
+// @Accept       json
+// @Produce      json
+// @Param        address_id   path      string  true  "Address ID"
+// @Success      200  {object}  utils.SuccessResponse
+// @Failure      400  {object}  utils.ErrorResponse
+// @Failure      404  {object}  utils.ErrorResponse
+// @Failure      500  {object}  utils.ErrorResponse
+// @Router       /users/address/{address_id} [delete]
 func (s *ServerHttpHandler) DeleteAddress(c echo.Context) (err error) {
 
 	// pare json

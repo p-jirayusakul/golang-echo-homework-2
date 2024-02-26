@@ -5,14 +5,14 @@ import (
 )
 
 type SuccessResponse struct {
-	Status  string      `json:"status"`
-	Message string      `json:"message"`
+	Status  string      `json:"status" example:"success"`
+	Message string      `json:"message" example:"success"`
 	Data    interface{} `json:"data"`
 }
 
 type ErrorResponse struct {
-	Status  string `json:"status"`
-	Message string `json:"message"`
+	Status  string `json:"status" example:"error"`
+	Message string `json:"message" example:"something went wrong"`
 }
 
 func RespondWithError(c echo.Context, code int, message string) error {

@@ -23,12 +23,12 @@ func NewHandler(
 	}
 
 	// auth
-	authGroup := app.Group("/auth")
+	authGroup := app.Group("/api/v1/auth")
 	authGroup.POST("/register", handler.Register)
 	authGroup.POST("/login", handler.Login)
 
 	// users
-	usersGroup := app.Group("/users")
+	usersGroup := app.Group("/api/v1/users")
 	usersGroup.POST("/profiles", handler.CreateProfiles)
 	usersGroup.GET("/profiles/:user_id", handler.GetProfiles)
 	usersGroup.PATCH("/profiles", handler.UpdateProfiles)

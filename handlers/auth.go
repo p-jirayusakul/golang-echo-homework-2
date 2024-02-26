@@ -11,6 +11,18 @@ import (
 	"github.com/p-jirayusakul/golang-echo-homework-2/utils"
 )
 
+// Register
+// @Summary      Register By email and password
+// @Description  register
+// @Tags         auth
+// @Accept       json
+// @Produce      json
+// @Param request body request.RegisterRequest true "body request"
+// @Success      201  {object}  utils.SuccessResponse.Data{data=response.RegisterResponse}
+// @Failure      400  {object}  utils.ErrorResponse
+// @Failure      404  {object}  utils.ErrorResponse
+// @Failure      500  {object}  utils.ErrorResponse
+// @Router       /auth/register [post]
 func (s *ServerHttpHandler) Register(c echo.Context) (err error) {
 	// pare json
 	body := new(request.RegisterRequest)

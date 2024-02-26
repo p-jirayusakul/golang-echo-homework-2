@@ -16,8 +16,18 @@ import (
 	"github.com/p-jirayusakul/golang-echo-homework-2/utils"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+
+	echoSwagger "github.com/swaggo/echo-swagger"
+
+	_ "github.com/p-jirayusakul/golang-echo-homework-2/docs"
 )
 
+// @title           Homework API 2
+// @version         1.0
+// @description     This is a sample homework 2
+
+// @host      localhost:3001
+// @BasePath  /api/v1
 func main() {
 
 	cfg := configs.InitConfigs(".env")
@@ -87,6 +97,8 @@ func main() {
 			},
 		}),
 	)
+
+	app.GET("/docs/*", echoSwagger.WrapHandler)
 	app.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, World!")
 	})
