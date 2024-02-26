@@ -1,0 +1,429 @@
+basePath: /api/v1
+definitions:
+  request.CreateAddressRequest:
+    properties:
+      addrNo:
+        example: 123/1 ABC
+        type: string
+      addrType:
+        example: condo
+        type: string
+      city:
+        example: Bangkok
+        type: string
+      state:
+        example: "123456"
+        type: string
+      street:
+        example: rachada
+        type: string
+      userId:
+        example: 6baad1bd-ef73-4092-a7ae-afb72f9921e3
+        type: string
+    type: object
+  request.CreateProfilesRequest:
+    properties:
+      email:
+        example: test@email.com
+        type: string
+      firstName:
+        example: testFirstName
+        type: string
+      lastName:
+        example: testLastName
+        type: string
+      phone:
+        example: "0888888888"
+        type: string
+      userId:
+        example: 6baad1bd-ef73-4092-a7ae-afb72f9921e3
+        type: string
+    type: object
+  request.RegisterRequest:
+    properties:
+      email:
+        example: test@email.com
+        type: string
+      password:
+        example: "123456"
+        minLength: 6
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  request.UpdateAddressRequest:
+    properties:
+      addrNo:
+        example: 99/1 GGEZ
+        type: string
+      addrType:
+        example: home
+        type: string
+      addressId:
+        example: c03217e0-6375-4bd5-bd66-b4ca5d558bc4
+        type: string
+      city:
+        example: Bangkok
+        type: string
+      state:
+        example: "123456"
+        type: string
+      street:
+        example: sukumvit
+        type: string
+      userId:
+        example: 6baad1bd-ef73-4092-a7ae-afb72f9921e3
+        type: string
+    type: object
+  request.UpdateProfilesRequest:
+    properties:
+      firstName:
+        example: testFirstNameUpdate
+        type: string
+      lastName:
+        example: testFirstNameUpdate
+        type: string
+      userId:
+        example: 6baad1bd-ef73-4092-a7ae-afb72f9921e3
+        type: string
+    required:
+    - firstName
+    - lastName
+    type: object
+  response.RegisterResponse:
+    properties:
+      id:
+        example: 6baad1bd-ef73-4092-a7ae-afb72f9921e3
+        type: string
+    type: object
+  utils.ErrorResponse:
+    properties:
+      message:
+        example: something went wrong
+        type: string
+      status:
+        example: error
+        type: string
+    type: object
+  utils.SuccessResponse:
+    properties:
+      data: {}
+      message:
+        example: success
+        type: string
+      status:
+        example: success
+        type: string
+    type: object
+host: localhost:3001
+info:
+  contact: {}
+  description: This is a sample homework 2
+  title: Homework API 2
+  version: "1.0"
+paths:
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: register
+      parameters:
+      - description: body request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/request.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.RegisterResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      summary: Register By email and password
+      tags:
+      - auth
+  /users/address:
+    patch:
+      consumes:
+      - application/json
+      description: Update Address
+      parameters:
+      - description: body request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/request.UpdateAddressRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      summary: Update Address By User Id
+      tags:
+      - users
+    post:
+      consumes:
+      - application/json
+      description: Create Address
+      parameters:
+      - description: body request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/request.CreateAddressRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/utils.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      summary: Create Address By User Id
+      tags:
+      - users
+  /users/address/{address_id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Address
+      parameters:
+      - description: Address ID
+        in: path
+        name: address_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      summary: Delete Address By Address Id
+      tags:
+      - users
+    get:
+      consumes:
+      - application/json
+      description: Get Address
+      parameters:
+      - description: Address ID
+        in: path
+        name: address_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      summary: Get Address By Address Id
+      tags:
+      - users
+  /users/profiles:
+    patch:
+      consumes:
+      - application/json
+      description: Update Profiles
+      parameters:
+      - description: body request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/request.UpdateProfilesRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      summary: Update Profiles By User Id
+      tags:
+      - users
+    post:
+      consumes:
+      - application/json
+      description: Create Profiles
+      parameters:
+      - description: body request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/request.CreateProfilesRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/utils.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      summary: Create Profiles By User Id
+      tags:
+      - users
+  /users/profiles/{user_id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Profiles
+      parameters:
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      summary: Delete Profiles By User Id
+      tags:
+      - users
+    get:
+      consumes:
+      - application/json
+      description: Get Profiles
+      parameters:
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      summary: Get Profiles By User Id
+      tags:
+      - users
+swagger: "2.0"
