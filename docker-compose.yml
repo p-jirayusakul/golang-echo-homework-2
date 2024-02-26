@@ -1,0 +1,47 @@
+version: "3.9"
+
+services:
+
+  postgres:
+      image: postgres:16.2-alpine3.19
+      container_name: postgres_container
+      environment:
+        POSTGRES_USER: 'postgres'
+        POSTGRES_PASSWORD: '1234'
+        POSTGRES_DB: 'homework1'
+      ports:
+        - 5432:5432
+      networks:
+        - homework1
+      volumes:
+        - ./docker/postgres:/docker-entrypoint-initdb.d/
+      healthcheck:
+        test: ["CMD-SHELL", "pg_isready -U postgres"]
+        interval: 5s
+        timeout: 5s
+        retries: 5
+
+  service:
+    container_name: service
+    build: .
+    environment:
+      JWT_SECRET: UucwjDH7AY40XLDyWpBUalCB151WgAfF
+      SECRET_KEY: L1K0zInpkIYzVXqUQdvnOc7FtbKOvpsJ
+      DATABASE_USER: 'postgres'
+      DATABASE_HOST: 'postgres'
+      DATABASE_PASSWORD: '1234'
+      DATABASE_PORT: 5432
+      DATABASE_NAME: 'homework1'
+      HTTP_PORT: 'service:3001'
+    ports:
+      - '3001:3001'
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - homework1
+    restart: always
+
+networks:
+  homework1:
+    driver: bridge

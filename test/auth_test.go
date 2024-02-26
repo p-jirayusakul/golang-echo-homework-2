@@ -104,7 +104,7 @@ func TestRegister(t *testing.T) {
 			app.Validator = utils.NewCustomValidator()
 			app.Use(utils.ErrorHandler)
 
-			req := httptest.NewRequest(http.MethodPost, "/auth/register", strings.NewReader(tc.body))
+			req := httptest.NewRequest(http.MethodPost, "/api/v1/auth/register", strings.NewReader(tc.body))
 			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 			rec := httptest.NewRecorder()
 			c := app.NewContext(req, rec)
@@ -177,7 +177,7 @@ func TestUpdateProfiles(t *testing.T) {
 			app.Validator = utils.NewCustomValidator()
 			app.Use(utils.ErrorHandler)
 
-			req := httptest.NewRequest(http.MethodPatch, "/users/profiles", strings.NewReader(tc.body))
+			req := httptest.NewRequest(http.MethodPatch, "/api/v1/users/profiles", strings.NewReader(tc.body))
 			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 			rec := httptest.NewRecorder()
 			c := app.NewContext(req, rec)
