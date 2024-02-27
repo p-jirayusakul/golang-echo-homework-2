@@ -91,6 +91,48 @@ definitions:
     - firstName
     - lastName
     type: object
+  response.GetAddressResponse:
+    properties:
+      addrNo:
+        example: 123/1 ABC
+        type: string
+      addrType:
+        example: condo
+        type: string
+      addressId:
+        example: c03217e0-6375-4bd5-bd66-b4ca5d558bc4
+        type: string
+      city:
+        example: Bangkok
+        type: string
+      state:
+        example: "123456"
+        type: string
+      street:
+        example: rachada
+        type: string
+      userId:
+        example: 6baad1bd-ef73-4092-a7ae-afb72f9921e3
+        type: string
+    type: object
+  response.GetProfilesResponse:
+    properties:
+      email:
+        example: test@email.com
+        type: string
+      firstName:
+        example: testFirstName
+        type: string
+      lastName:
+        example: testLastName
+        type: string
+      phone:
+        example: "0888888888"
+        type: string
+      userId:
+        example: 6baad1bd-ef73-4092-a7ae-afb72f9921e3
+        type: string
+    type: object
   response.RegisterResponse:
     properties:
       id:
@@ -278,7 +320,12 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/utils.SuccessResponse'
+            allOf:
+            - $ref: '#/definitions/utils.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.GetAddressResponse'
+              type: object
         "400":
           description: Bad Request
           schema:
@@ -410,7 +457,12 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/utils.SuccessResponse'
+            allOf:
+            - $ref: '#/definitions/utils.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.GetProfilesResponse'
+              type: object
         "400":
           description: Bad Request
           schema:
