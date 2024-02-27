@@ -8,16 +8,16 @@ import (
 	"gorm.io/gorm"
 )
 
-func (x *Queries) CreateAddress(payload Address) error {
+func (q *Queries) CreateAddress(payload Address) error {
 
-	result := x.db.Create(&payload)
+	result := q.db.Create(&payload)
 
 	return result.Error
 }
 
-func (x *Queries) GetAddress(id uuid.UUID) (Address, error) {
+func (q *Queries) GetAddress(id uuid.UUID) (Address, error) {
 	data := Address{}
-	result := x.db.Where("address_id = ?", id).First(&data)
+	result := q.db.Where("address_id = ?", id).First(&data)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 			return Address{}, utils.ErrDataNotFound
@@ -27,10 +27,10 @@ func (x *Queries) GetAddress(id uuid.UUID) (Address, error) {
 	return data, result.Error
 }
 
-func (x *Queries) UpdateAddress(arg Address) error {
+func (q *Queries) UpdateAddress(arg Address) error {
 	data := Address{}
 
-	result := x.db.Where("address_id = ?", arg.AddressId).First(&data)
+	result := q.db.Where("address_id = ?", arg.AddressId).First(&data)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 			return utils.ErrDataNotFound
@@ -45,11 +45,11 @@ func (x *Queries) UpdateAddress(arg Address) error {
 	data.City = arg.City
 	data.State = arg.State
 
-	return x.db.Model(Address{}).Where("address_id = ?", data.AddressId).Updates(data).Error
+	return q.db.Model(Address{}).Where("address_id = ?", data.AddressId).Updates(data).Error
 }
 
-func (x *Queries) DeleteAddress(id uuid.UUID) error {
-	result := x.db.Where("address_id = ?", id).Delete(&Address{})
+func (q *Queries) DeleteAddress(id uuid.UUID) error {
+	result := q.db.Where("address_id = ?", id).Delete(&Address{})
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 			return utils.ErrDataNotFound

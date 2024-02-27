@@ -13,9 +13,9 @@ func (q *Queries) CreateAccounts(payload Accounts) (uuid.UUID, error) {
 	return payload.UserID, result.Error
 }
 
-func (x *Queries) GetAccounts(email string) (Accounts, error) {
+func (q *Queries) GetAccounts(email string) (Accounts, error) {
 	data := Accounts{}
-	result := x.db.Where("email = ?", email).First(&data)
+	result := q.db.Where("email = ?", email).First(&data)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 			return Accounts{}, utils.ErrDataNotFound
@@ -25,8 +25,8 @@ func (x *Queries) GetAccounts(email string) (Accounts, error) {
 	return data, result.Error
 }
 
-func (x *Queries) IsEmailAlreadyExists(email string) (bool, error) {
+func (q *Queries) IsEmailAlreadyExists(email string) (bool, error) {
 	var count int64
-	result := x.db.Model(&Accounts{}).Where("email = ?", email).Count(&count)
+	result := q.db.Model(&Accounts{}).Where("email = ?", email).Count(&count)
 	return count > 0, result.Error
 }

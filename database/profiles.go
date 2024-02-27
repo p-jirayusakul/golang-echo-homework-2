@@ -8,13 +8,13 @@ import (
 	"gorm.io/gorm"
 )
 
-func (x *Queries) CreateProfiles(payload Profiles) error {
-	return x.db.Create(&payload).Error
+func (q *Queries) CreateProfiles(payload Profiles) error {
+	return q.db.Create(&payload).Error
 }
 
-func (x *Queries) GetProfiles(id uuid.UUID) (Profiles, error) {
+func (q *Queries) GetProfiles(id uuid.UUID) (Profiles, error) {
 	data := Profiles{}
-	result := x.db.Where("user_id = ?", id).First(&data)
+	result := q.db.Where("user_id = ?", id).First(&data)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 			return Profiles{}, utils.ErrDataNotFound
@@ -30,10 +30,10 @@ type UpdateProfilesParams struct {
 	LastName  string    `json:"lastName"`
 }
 
-func (x *Queries) UpdateProfiles(payload UpdateProfilesParams) error {
+func (q *Queries) UpdateProfiles(payload UpdateProfilesParams) error {
 	data := Profiles{}
 
-	result := x.db.Where("user_id = ?", payload.UserID).First(&data)
+	result := q.db.Where("user_id = ?", payload.UserID).First(&data)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 			return utils.ErrDataNotFound
@@ -44,11 +44,11 @@ func (x *Queries) UpdateProfiles(payload UpdateProfilesParams) error {
 	data.FirstName = &payload.FirstName
 	data.LastName = &payload.LastName
 
-	return x.db.Model(Profiles{}).Where("user_id = ?", payload.UserID.String()).Updates(data).Error
+	return q.db.Model(Profiles{}).Where("user_id = ?", payload.UserID.String()).Updates(data).Error
 }
 
-func (x *Queries) DeleteProfiles(id uuid.UUID) error {
-	result := x.db.Where("user_id = ?", id.String()).Delete(&Profiles{})
+func (q *Queries) DeleteProfiles(id uuid.UUID) error {
+	result := q.db.Where("user_id = ?", id.String()).Delete(&Profiles{})
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 			return utils.ErrDataNotFound
