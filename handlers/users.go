@@ -7,6 +7,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/p-jirayusakul/golang-echo-homework-2/database"
 	"github.com/p-jirayusakul/golang-echo-homework-2/handlers/request"
+	"github.com/p-jirayusakul/golang-echo-homework-2/handlers/response"
 	"github.com/p-jirayusakul/golang-echo-homework-2/utils"
 )
 
@@ -62,7 +63,7 @@ func (s *ServerHttpHandler) CreateProfiles(c echo.Context) (err error) {
 // @Accept       json
 // @Produce      json
 // @Param        user_id   path      string  true  "User ID"
-// @Success      200  {object}  utils.SuccessResponse
+// @Success      200  {object}  utils.SuccessResponse.Data{data=response.GetProfilesResponse}
 // @Failure      400  {object}  utils.ErrorResponse
 // @Failure      404  {object}  utils.ErrorResponse
 // @Failure      500  {object}  utils.ErrorResponse
@@ -88,7 +89,15 @@ func (s *ServerHttpHandler) GetProfiles(c echo.Context) (err error) {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
-	return utils.RespondWithJSON(c, http.StatusCreated, result)
+	payload := response.GetProfilesResponse{
+		UserID:    result.UserID.String(),
+		FirstName: result.FirstName,
+		LastName:  result.LastName,
+		Email:     result.Email,
+		Phone:     result.Phone,
+	}
+
+	return utils.RespondWithJSON(c, http.StatusCreated, payload)
 }
 
 // Update Profiles
@@ -224,7 +233,7 @@ func (s *ServerHttpHandler) CreateAddress(c echo.Context) (err error) {
 // @Accept       json
 // @Produce      json
 // @Param        address_id   path      string  true  "Address ID"
-// @Success      200  {object}  utils.SuccessResponse
+// @Success      200  {object}  utils.SuccessResponse.Data{data=response.GetAddressResponse}
 // @Failure      400  {object}  utils.ErrorResponse
 // @Failure      404  {object}  utils.ErrorResponse
 // @Failure      500  {object}  utils.ErrorResponse
@@ -250,7 +259,17 @@ func (s *ServerHttpHandler) GetAddress(c echo.Context) (err error) {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
-	return utils.RespondWithJSON(c, http.StatusCreated, result)
+	payload := response.GetAddressResponse{
+		AddressId: result.AddressId.String(),
+		UserID:    result.UserID.String(),
+		AddrType:  result.AddrType,
+		AddrNo:    result.AddrNo,
+		Street:    result.Street,
+		State:     result.State,
+		City:      result.City,
+	}
+
+	return utils.RespondWithJSON(c, http.StatusCreated, payload)
 }
 
 // Update Address

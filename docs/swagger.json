@@ -201,7 +201,19 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/utils.SuccessResponse"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/utils.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/response.GetAddressResponse"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     },
                     "400": {
@@ -401,7 +413,19 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/utils.SuccessResponse"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/utils.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/response.GetProfilesResponse"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     },
                     "400": {
@@ -594,6 +618,64 @@
                 "lastName": {
                     "type": "string",
                     "example": "testFirstNameUpdate"
+                },
+                "userId": {
+                    "type": "string",
+                    "example": "6baad1bd-ef73-4092-a7ae-afb72f9921e3"
+                }
+            }
+        },
+        "response.GetAddressResponse": {
+            "type": "object",
+            "properties": {
+                "addrNo": {
+                    "type": "string",
+                    "example": "123/1 ABC"
+                },
+                "addrType": {
+                    "type": "string",
+                    "example": "condo"
+                },
+                "addressId": {
+                    "type": "string",
+                    "example": "c03217e0-6375-4bd5-bd66-b4ca5d558bc4"
+                },
+                "city": {
+                    "type": "string",
+                    "example": "Bangkok"
+                },
+                "state": {
+                    "type": "string",
+                    "example": "123456"
+                },
+                "street": {
+                    "type": "string",
+                    "example": "rachada"
+                },
+                "userId": {
+                    "type": "string",
+                    "example": "6baad1bd-ef73-4092-a7ae-afb72f9921e3"
+                }
+            }
+        },
+        "response.GetProfilesResponse": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "test@email.com"
+                },
+                "firstName": {
+                    "type": "string",
+                    "example": "testFirstName"
+                },
+                "lastName": {
+                    "type": "string",
+                    "example": "testLastName"
+                },
+                "phone": {
+                    "type": "string",
+                    "example": "0888888888"
                 },
                 "userId": {
                     "type": "string",
